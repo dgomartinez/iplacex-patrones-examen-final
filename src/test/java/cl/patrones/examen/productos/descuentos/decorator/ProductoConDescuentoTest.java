@@ -111,4 +111,24 @@ class ProductoConDescuentoTest {
         assertEquals(100000L, decorado.getPrecioFinal());
         assertEquals(0, decorado.getPorcentajeDescuento());
     }
+
+    @Test
+    void debeAplicarDescuentoEmpleadoYCalcularPrecioFinal() {
+
+        Producto producto = crearProducto();
+
+        ContextoDescuento contexto =
+                new ContextoDescuento(DayOfWeek.FRIDAY, true);
+
+        ProductoConDescuento decorado = new ProductoConDescuento(
+                producto,
+                crearSelector(),
+                contexto);
+
+        assertEquals(5000L, decorado.getDescuento());
+        assertEquals(95000L, decorado.getPrecioFinal());
+        assertEquals(5, decorado.getPorcentajeDescuento());
+    }
+
+
 }

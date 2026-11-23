@@ -126,4 +126,61 @@ class SelectorDescuentosTest {
 
         assertTrue(resultado.isEmpty());
     }
+
+    @Test
+    void debeSeleccionarOchoPorCientoCuandoEmpleadoCompraEsmerilElMartes() {
+
+        Producto producto = crearProducto("Esmeriles Angulares", 100000L);
+        ContextoDescuento contexto =
+                new ContextoDescuento(DayOfWeek.TUESDAY, true);
+
+        var resultado = selector.seleccionar(producto, contexto);
+
+        assertTrue(resultado.isPresent());
+        assertEquals(8, resultado.get().obtenerPorcentaje());
+        assertEquals(8000L, resultado.get().calcularDescuento(producto));
+    }
+
+    @Test
+    void debeSeleccionarDiezPorCientoCuandoEmpleadoCompraTaladroElMiercoles() {
+
+        Producto producto = crearProducto("Taladros Percutores", 100000L);
+        ContextoDescuento contexto =
+                new ContextoDescuento(DayOfWeek.WEDNESDAY, true);
+
+        var resultado = selector.seleccionar(producto, contexto);
+
+        assertTrue(resultado.isPresent());
+        assertEquals(10, resultado.get().obtenerPorcentaje());
+        assertEquals(10000L, resultado.get().calcularDescuento(producto));
+    }
+
+    @Test
+    void noDebeAplicarDescuentoDiarioSiLaCategoriaNoCorrespondeAlDia() {
+
+        Producto producto = crearProducto("Esmeriles Angulares", 100000L);
+        ContextoDescuento contexto =
+                new ContextoDescuento(DayOfWeek.MONDAY, false);
+
+        var resultado = selector.seleccionar(producto, contexto);
+
+        assertTrue(resultado.isEmpty());
+    }
+
+    @Test
+    void debeAplicarDescuentoEmpleadoAunqueElProductoNoTengaPromocionDiaria() {
+
+        Producto producto = crearProducto("Martillos", 100000L);
+        ContextoDescuento contexto =
+                new ContextoDescuento(DayOfWeek.FRIDAY, true);
+
+        var resultado = selector.seleccionar(producto, contexto);
+
+        assertTrue(resultado.isPresent());
+        assertEquals(5, resultado.get().obtenerPorcentaje());
+        assertEquals(5000L, resultado.get().calcularDescuento(producto));
+    }
+
+
+
 }
